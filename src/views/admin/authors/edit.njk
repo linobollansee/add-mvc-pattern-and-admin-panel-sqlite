@@ -1,0 +1,108 @@
+{% extends "admin/layout.njk" %} {% block content %} {# Page header #}
+<div
+  class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+>
+  <h1 class="h2">
+    {% if author %}Edit Author{% else %}Create New Author{% endif %}
+  </h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <a href="/admin/authors" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Back to Authors
+    </a>
+  </div>
+</div>
+
+{# Error message #} {% if error %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{ error }}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endif %} {# Author form #}
+<form
+  action="{% if author %}/admin/authors/{{
+    author.id
+  }}{% else %}/admin/authors{% endif %}"
+  method="POST"
+>
+  <div class="row">
+    <div class="col-md-8">
+      {# Name field #}
+      <div class="mb-3">
+        <label for="name" class="form-label">Name *</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          value="{{ author.name if author else '' }}"
+          required
+        />
+      </div>
+
+      {# Email field #}
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          value="{{ author.email if author else '' }}"
+        />
+        <div class="form-text">
+          Optional email address (must be unique if provided)
+        </div>
+      </div>
+
+      {# Bio field #}
+      <div class="mb-3">
+        <label for="bio" class="form-label">Biography</label>
+        <textarea
+          class="form-control"
+          id="bio"
+          name="bio"
+          rows="5"
+          >{{ author.bio if author else '' }}</textarea
+        >
+        <div class="form-text">A short bio about the author</div>
+      </div>
+    </div>
+
+    {# Sidebar #}
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">Author Settings</div>
+        <div class="card-body">
+          {% if author %}
+          <div class="mb-3">
+            <label class="form-label">Created</label>
+            <p class="form-text">
+              {{ author.created_at | date('MMMM D, YYYY h:mm A') }}
+            </p>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Last Updated</label>
+            <p class="form-text">
+              {{ author.updated_at | date('MMMM D, YYYY h:mm A') }}
+            </p>
+          </div>
+          {% endif %} {# Form buttons #}
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save"></i> {% if author %}Update Author{% else
+              %}Create Author{% endif %}
+            </button>
+            <a href="/admin/authors" class="btn btn-secondary">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
