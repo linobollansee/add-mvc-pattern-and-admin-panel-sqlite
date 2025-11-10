@@ -1,0 +1,157 @@
+{# Post Create/Edit Form - Admin Panel / Beitrag Erstellen/Bearbeiten Formular -
+Admin-Panel #} {# Form for creating new posts or editing existing ones #} {#
+Formular zum Erstellen neuer Beiträge oder Bearbeiten vorhandener #} {# Rendered
+by: adminController.create() (new) or adminController.edit() (existing) #} {#
+Gerendert von: adminController.create() (neu) oder adminController.edit()
+(vorhanden) #} {# Form submits to: POST /admin/posts (create) or POST
+/admin/posts/:id (update) #} {# Formular sendet an: POST /admin/posts
+(erstellen) oder POST /admin/posts/:id (aktualisieren) #} {# Variables: post
+(Post object when editing, null when creating), error (optional) #} {#
+Variablen: post (Post-Objekt beim Bearbeiten, null beim Erstellen), error
+(optional) #} {% extends "admin/layout.njk" %} {% block head %} {# Quill rich
+text editor CSS / Quill Rich-Text-Editor CSS #}
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+{% endblock %} {% block content %} {# Page header / Seitenkopf #}
+<div
+  class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+>
+  {# Title changes based on create vs edit mode / Titel ändert sich basierend
+  auf Erstellen vs Bearbeiten Modus #}
+  <h1 class="h2">{% if post %}Edit Post{% else %}Create New Post{% endif %}</h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    {# Back to posts list button / Zurück zur Beitragsliste Schaltfläche #}
+    <a href="/admin/posts" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Back to Posts
+    </a>
+  </div>
+</div>
+
+{# Error message alert / Fehlermeldungs-Warnung #} {# Shown if form validation
+fails or save operation fails #} {# Angezeigt wenn Formularvalidierung
+fehlschlägt oder Speichervorgang fehlschlägt #} {% if error %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{ error }}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endif %} {# Post form - action changes based on create vs edit mode #} {#
+Beitragsformular - Aktion ändert sich basierend auf Erstellen vs Bearbeiten
+Modus #}
+<form
+  action="{% if post %}/admin/posts/{{
+    post.id
+  }}{% else %}/admin/posts{% endif %}"
+  method="POST"
+  id="postForm"
+>
+  <div class="row">
+    {# Main content column / Hauptinhalts-Spalte #}
+    <div class="col-md-8">
+      {# Post title field / Beitragstitel-Feld #}
+      <div class="mb-3">
+        <label for="title" class="form-label">Title *</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          value="{{ post.title if post else '' }}"
+          required
+        />
+      </div>
+
+      {# Post excerpt field / Beitragsauszug-Feld #}
+      <div class="mb-3">
+        <label for="excerpt" class="form-label">Excerpt *</label>
+        <textarea
+          class="form-control"
+          id="excerpt"
+          name="excerpt"
+          rows="3"
+          required
+          >{{ post.excerpt if post else '' }}</textarea
+        >
+        <div class="form-text">
+          A short summary of the post (shown in listings)
+        </div>
+      </div>
+
+      {# Rich text editor for post content / Rich-Text-Editor für Beitragsinhalt
+      #}
+      <div class="mb-3">
+        <label for="content" class="form-label">Content *</label>
+        {# Quill editor container / Quill-Editor-Container #}
+        <div id="editor" style="height: 400px">
+          {{ post.content | safe if post else '' }}
+        </div>
+        {# Hidden field stores HTML content for form submission #} {#
+        Verstecktes Feld speichert HTML-Inhalt für Formularübermittlung #}
+        <input type="hidden" name="content" id="content" />
+        <div class="form-text">
+          Use the rich text editor to format your content
+        </div>
+      </div>
+    </div>
+
+    {# Sidebar column with settings / Sidebar-Spalte mit Einstellungen #}
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">Post Settings</div>
+        <div class="card-body">
+          {# Author field / Autor-Feld #}
+          <div class="mb-3">
+            <label for="author" class="form-label">Author *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="author"
+              name="author"
+              value="{{ post.author if post else 'Anonymous' }}"
+              required
+            />
+          </div>
+
+          {# Metadata - only shown when editing existing post #} {# Metadaten -
+          nur angezeigt beim Bearbeiten vorhandenen Beitrags #} {% if post %}
+          <div class="mb-3">
+            <label class="form-label">Created</label>
+            <p class="form-text">
+              {{ post.createdAt | date('MMMM D, YYYY h:mm A') }}
+            </p>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Last Updated</label>
+            <p class="form-text">
+              {{ post.updatedAt | date('MMMM D, YYYY h:mm A') }}
+            </p>
+          </div>
+          {% endif %} {# Form action buttons / Formular-Aktions-Schaltflächen #}
+          <div class="d-grid gap-2">
+            {# Submit button - text changes based on mode #} {#
+            Absende-Schaltfläche - Text ändert sich basierend auf Modus #}
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save"></i> {% if post %}Update Post{% else
+              %}Create Post{% endif %}
+            </button>
+            {# Cancel button returns to post list / Abbrechen-Schaltfläche kehrt
+            zur Beitragsliste zurück #}
+            <a href="/admin/posts" class="btn btn-secondary">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %} {% block scripts %} {# Quill rich text editor JavaScript / Quill
+Rich-Text-Editor JavaScript #}
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+{# Custom editor initialization script / Benutzerdefiniertes
+Editor-Initialisierungsskript #} {# Located in: public/js/editor.js / Befindet
+sich in: public/js/editor.js #}
+<script src="/js/editor.js"></script>
+{% endblock %}

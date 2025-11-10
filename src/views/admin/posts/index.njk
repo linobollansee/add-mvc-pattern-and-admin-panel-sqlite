@@ -1,0 +1,191 @@
+{# Admin Posts List - Post Management / Admin-Beitragsliste - Beitragsverwaltung
+#} {# Dashboard for viewing, searching, and managing all blog posts #} {#
+Dashboard zum Anzeigen, Suchen und Verwalten aller Blog-Beiträge #} {# Rendered
+by: adminController.index() / Gerendert von: adminController.index() #} {#
+Route: GET /admin/posts (requires authentication) / Route: GET /admin/posts
+(erfordert Authentifizierung) #} {# Variables: posts, searchQuery, currentPage,
+totalPages, hasPrevious, hasNext #} {# Variablen: posts, searchQuery,
+currentPage, totalPages, hasPrevious, hasNext #} {% extends "admin/layout.njk"
+%} {% block content %} {# Page header with title and "New Post" button /
+Seitenkopf mit Titel und "Neuer Beitrag" Schaltfläche #}
+<div
+  class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+>
+  <h1 class="h2">Manage Blog Posts</h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    {# Create new post button / Neuen Beitrag erstellen Schaltfläche #}
+    <a href="/admin/posts/new" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> New Post
+    </a>
+  </div>
+</div>
+
+{# Search form / Suchformular #}
+<div class="row mb-3">
+  <div class="col-md-6">
+    {# Search posts by title, excerpt, or content / Suche Beiträge nach Titel,
+    Auszug oder Inhalt #}
+    <form action="/admin/posts" method="GET" class="d-flex">
+      <input
+        type="search"
+        name="search"
+        class="form-control me-2"
+        placeholder="Search posts..."
+        value="{{ searchQuery }}"
+      />
+      <button type="submit" class="btn btn-outline-secondary">
+        <i class="bi bi-search"></i> Search
+      </button>
+    </form>
+  </div>
+</div>
+
+{# No posts message / Keine-Beiträge-Nachricht #} {% if posts.length === 0 %}
+<div class="alert alert-info">
+  {% if searchQuery %} {# Search returned no results / Suche ergab keine
+  Ergebnisse #} No posts found matching "{{ searchQuery }}". {% else %} {# No
+  posts exist yet / Noch keine Beiträge vorhanden #} No posts available. Create
+  your first post! {% endif %}
+</div>
+{% else %} {# Posts table / Beitragstabelle #}
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Created</th>
+        <th>Updated</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {# Loop through each post / Durchlaufe jeden Beitrag #} {% for post in
+      posts %}
+      <tr>
+        {# Post ID / Beitrags-ID #}
+        <td>{{ post.id }}</td>
+
+        {# Post title and excerpt preview / Beitragstitel und Auszugsvorschau #}
+        <td>
+          <strong>{{ post.title }}</strong>
+          <br />
+          {# Truncated excerpt - uses custom Nunjucks filter / Gekürzter Auszug
+          - verwendet benutzerdefinierten Nunjucks-Filter #}
+          <small class="text-muted">{{ post.excerpt | truncate(60) }}</small>
+        </td>
+
+        {# Post author / Beitragsautor #}
+        <td>{{ post.author }}</td>
+
+        {# Creation date / Erstellungsdatum #}
+        <td>{{ post.createdAt | date('MMM D, YYYY') }}</td>
+
+        {# Last update date / Letztes Aktualisierungsdatum #}
+        <td>{{ post.updatedAt | date('MMM D, YYYY') }}</td>
+
+        {# Action buttons: View, Edit, Delete / Aktions-Schaltflächen: Anzeigen,
+        Bearbeiten, Löschen #}
+        <td>
+          <div class="btn-group btn-group-sm" role="group">
+            {# View post on public site (opens in new tab) / Zeige Beitrag auf
+            öffentlicher Seite (öffnet in neuem Tab) #}
+            <a
+              href="/posts/{{ post.slug }}"
+              class="btn btn-outline-info"
+              target="_blank"
+              title="View"
+            >
+              <i class="bi bi-eye"></i>
+            </a>
+
+            {# Edit post / Beitrag bearbeiten #}
+            <a
+              href="/admin/posts/{{ post.id }}/edit"
+              class="btn btn-outline-primary"
+              title="Edit"
+            >
+              <i class="bi bi-pencil"></i>
+            </a>
+
+            {# Delete post with confirmation / Beitrag löschen mit Bestätigung
+            #}
+            <form
+              action="/admin/posts/{{ post.id }}/delete"
+              method="POST"
+              style="display: inline"
+              onsubmit="return confirm('Are you sure you want to delete this post?');"
+            >
+              <button
+                type="submit"
+                class="btn btn-outline-danger btn-sm"
+                title="Delete"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# Pagination controls / Paginierungssteuerung #} {% if totalPages > 1 %}
+<nav aria-label="Admin posts pagination" class="mt-4">
+  <ul class="pagination">
+    {# Previous page button / Vorherige Seite Schaltfläche #}
+    <li class="page-item {% if not hasPrevious %}disabled{% endif %}">
+      <a
+        class="page-link"
+        href="/admin/posts?page={{
+          currentPage - 1
+        }}{% if searchQuery %}&search={{ searchQuery }}{% endif %}"
+        {%
+        if
+        not
+        hasPrevious
+        %}tabindex="-1"
+        {%
+        endif
+        %}
+      >
+        Previous
+      </a>
+    </li>
+
+    {# Page number buttons / Seitennummer-Schaltflächen #} {% for pageNum in
+    range(1, totalPages + 1) %}
+    <li class="page-item {% if pageNum === currentPage %}active{% endif %}">
+      <a
+        class="page-link"
+        href="/admin/posts?page={{ pageNum }}{% if searchQuery %}&search={{
+          searchQuery
+        }}{% endif %}"
+        >{{ pageNum }}</a
+      >
+    </li>
+    {% endfor %} {# Next page button / Nächste Seite Schaltfläche #}
+    <li class="page-item {% if not hasNext %}disabled{% endif %}">
+      <a
+        class="page-link"
+        href="/admin/posts?page={{
+          currentPage + 1
+        }}{% if searchQuery %}&search={{ searchQuery }}{% endif %}"
+        {%
+        if
+        not
+        hasNext
+        %}tabindex="-1"
+        {%
+        endif
+        %}
+      >
+        Next
+      </a>
+    </li>
+  </ul>
+</nav>
+{% endif %} {% endif %} {% endblock %}

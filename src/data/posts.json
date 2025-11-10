@@ -1,0 +1,205 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "Getting Started with Node.js",
+      "slug": "getting-started-with-nodejs",
+      "excerpt": "Learn the basics of Node.js and how to build your first server-side application.",
+      "content": "<p>Node.js is a powerful JavaScript runtime built on Chrome's V8 JavaScript engine. It allows you to build scalable network applications using JavaScript on the server side.</p><p>In this guide, we'll explore the fundamentals and create a simple web server.</p>",
+      "author": "John Doe",
+      "createdAt": "2025-01-15T10:00:00.000Z",
+      "updatedAt": "2025-01-15T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "Understanding the MVC Pattern",
+      "slug": "understanding-mvc-pattern",
+      "excerpt": "The Model-View-Controller pattern is a fundamental architectural pattern for building web applications.",
+      "content": "<p>MVC stands for Model-View-Controller. It's an architectural pattern that separates an application into three main components:</p><ul><li><strong>Model:</strong> Manages the data and business logic</li><li><strong>View:</strong> Handles the display and presentation</li><li><strong>Controller:</strong> Acts as an interface between Model and View</li></ul><p>This separation makes your code more organized and maintainable.</p>",
+      "author": "Jane Smith",
+      "createdAt": "2025-02-10T14:30:00.000Z",
+      "updatedAt": "2025-02-10T14:30:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "Introduction to Nunjucks Templating",
+      "slug": "introduction-to-nunjucks-templating",
+      "excerpt": "Nunjucks is a rich and powerful templating language for JavaScript.",
+      "content": "<p>Nunjucks is inspired by Jinja2 and provides a clean syntax for creating dynamic HTML templates.</p><p>Key features include:</p><ul><li>Template inheritance</li><li>Filters and functions</li><li>Macros for reusable components</li><li>Asynchronous rendering support</li></ul><p>It's perfect for server-side rendering with Express!</p>",
+      "author": "John Doe",
+      "createdAt": "2025-03-05T09:15:00.000Z",
+      "updatedAt": "2025-11-06T08:57:14.410Z"
+    },
+    {
+      "id": 4,
+      "title": "Building REST APIs with Express",
+      "slug": "building-rest-apis-with-express",
+      "excerpt": "A practical guide to structuring and implementing RESTful APIs using Express.",
+      "content": "<p>Express is a minimalist web framework for Node.js that makes building APIs straightforward. A well-structured REST API includes clear resource routes, proper HTTP methods, validation, error handling, and pagination.</p><p>Best practices include:</p><ul><li>Use plural nouns for resource routes (e.g., <code>/users</code>)</li><li>Return proper status codes (201 for creation, 400 for validation errors)</li><li>Implement middleware for authentication and logging</li><li>Validate request bodies before processing</li></ul><p>Express middleware chains allow you to compose functionality cleanly.</p>",
+      "author": "Emily Carter",
+      "createdAt": "2025-03-20T11:10:00.000Z",
+      "updatedAt": "2025-03-20T11:10:00.000Z"
+    },
+    {
+      "id": 5,
+      "title": "Middleware Patterns in Express",
+      "slug": "middleware-patterns-in-express",
+      "excerpt": "Understand how Express middleware works and how to design reusable units.",
+      "content": "<p>Middleware functions in Express receive the request and response objects and either end the response cycle or pass control to the next function. Common middleware tasks include parsing JSON, logging, authentication, and error handling.</p><p>Patterns:</p><ul><li>Parameter-based middleware for loading resources (<code>router.param()</code>)</li><li>Factory functions returning configured middleware</li><li>Error-handling middleware with 4 arguments (<code>(err, req, res, next)</code>)</li></ul><p>Well-designed middleware reduces duplication and improves maintainability.</p>",
+      "author": "Laura Nguyen",
+      "createdAt": "2025-03-28T09:45:00.000Z",
+      "updatedAt": "2025-03-28T09:45:00.000Z"
+    },
+    {
+      "id": 6,
+      "title": "Securing Node.js Applications",
+      "slug": "securing-nodejs-applications",
+      "excerpt": "Key security practices: input validation, sanitization, rate limiting, and dependency auditing.",
+      "content": "<p>Security in Node.js involves mitigating common web vulnerabilities: XSS, SQL injection, CSRF, and insecure dependencies. Use libraries like <code>helmet</code> to set HTTP headers, <code>express-rate-limit</code> to throttle requests, and <code>sanitize-html</code> or validation libraries to clean input.</p><p>Additional steps:</p><ul><li>Keep dependencies updated</li><li>Avoid storing secrets in source control</li><li>Use <code>npm audit</code> and monitoring tools</li><li>Implement proper authentication and session management</li></ul><p>A layered approach drastically reduces risk.</p>",
+      "author": "Michael Brown",
+      "createdAt": "2025-04-02T15:20:00.000Z",
+      "updatedAt": "2025-04-02T15:20:00.000Z"
+    },
+    {
+      "id": 7,
+      "title": "Testing Node.js with Jest",
+      "slug": "testing-nodejs-with-jest",
+      "excerpt": "Learn how to write unit and integration tests for Node.js applications using Jest.",
+      "content": "<p>Jest provides an all-in-one testing framework with assertions, mocking, and snapshot capabilities. For a Node.js API, test pure functions (unit tests) and HTTP endpoints (integration tests) using <code>supertest</code>.</p><p>Recommendations:</p><ul><li>Group tests by feature or module</li><li>Use <code>beforeAll</code>/<code>afterAll</code> for setup/teardown</li><li>Mock external services and databases</li><li>Measure coverage to find untested logic</li></ul><p>Consistent testing improves reliability and confidence when refactoring.</p>",
+      "author": "Sophia Turner",
+      "createdAt": "2025-04-10T08:05:00.000Z",
+      "updatedAt": "2025-04-10T08:05:00.000Z"
+    },
+    {
+      "id": 8,
+      "title": "Managing Environment Variables in Node.js",
+      "slug": "managing-environment-variables-in-nodejs",
+      "excerpt": "Environment variables allow configuration without changing code—use dotenv and validation.",
+      "content": "<p>Environment variables support flexible configuration across development, staging, and production. Use the <code>dotenv</code> package for local development and a process manager or deployment platform for production.</p><p>Best practices:</p><ul><li>Validate required variables at startup</li><li>Never commit secrets (.env in <code>.gitignore</code>)</li><li>Namespace variables (e.g., <code>APP_PORT</code>, <code>DB_URL</code>)</li><li>Use consistent casing (UPPER_SNAKE_CASE)</li></ul><p>Early validation prevents silent misconfiguration.</p>",
+      "author": "Daniel Green",
+      "createdAt": "2025-04-15T12:30:00.000Z",
+      "updatedAt": "2025-04-15T12:30:00.000Z"
+    },
+    {
+      "id": 9,
+      "title": "Implementing Pagination in Express",
+      "slug": "implementing-pagination-in-express",
+      "excerpt": "Add pagination to improve performance and usability—calculate offsets and return metadata.",
+      "content": "<p>Pagination prevents large payloads and improves perceived performance. Core elements include <code>page</code>, <code>limit</code>, <code>offset</code>, and metadata about total items and pages.</p><p>Steps:</p><ul><li>Parse query params with defaults</li><li>Validate numeric values</li><li>Query only needed slice</li><li>Return <code>{ data, page, totalPages, totalItems }</code></li></ul><p>Consistent pagination structure makes client integration easier.</p>",
+      "author": "Emily Carter",
+      "createdAt": "2025-04-20T09:00:00.000Z",
+      "updatedAt": "2025-04-20T09:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "title": "Error Handling Strategies in Express",
+      "slug": "error-handling-strategies-in-express",
+      "excerpt": "Centralize error handling with middleware, structured responses, and logging.",
+      "content": "<p>Express error handling simplifies response consistency. Use a final error-handling middleware to map known errors (validation, not found) to HTTP codes and messages, while logging internal errors.</p><p>Recommendations:</p><ul><li>Create custom error classes</li><li>Don't expose stack traces in production</li><li>Log errors with correlation IDs</li><li>Return machine-readable error bodies</li></ul><p>This approach improves debuggability and user experience.</p>",
+      "author": "Laura Nguyen",
+      "createdAt": "2025-04-25T16:40:00.000Z",
+      "updatedAt": "2025-04-25T16:40:00.000Z"
+    },
+    {
+      "id": 11,
+      "title": "Introduction to Express Routers",
+      "slug": "introduction-to-express-routers",
+      "excerpt": "Divide large applications into modular route files for clarity and scalability.",
+      "content": "<p>Express routers allow grouping related endpoints. Each router can encapsulate middleware, validation, and sub-routes. This improves separation of concerns.</p><p>Pattern:</p><ul><li>Main app mounts routers (e.g., <code>app.use('/api', apiRouter)</code>)</li><li>Routers can mount nested routers</li><li>Keep router files focused on route declarations</li></ul><p>Modularity aids collaboration and reuse.</p>",
+      "author": "Michael Brown",
+      "createdAt": "2025-05-01T10:25:00.000Z",
+      "updatedAt": "2025-05-01T10:25:00.000Z"
+    },
+    {
+      "id": 12,
+      "title": "State Management on the Server Side",
+      "slug": "state-management-on-the-server-side",
+      "excerpt": "Differentiate between transient process state and persistent external state.",
+      "content": "<p>Server-side state can be ephemeral (in-memory caches) or persistent (databases). Managing state responsibly involves avoiding hidden coupling and designing for restart resilience.</p><p>Guidelines:</p><ul><li>Use external stores for shared state (Redis, DB)</li><li>Avoid mutating global objects across modules</li><li>Encapsulate state access in services or models</li><li>Document lifecycle expectations</li></ul><p>Clear patterns reduce unpredictable behavior under load.</p>",
+      "author": "Sophia Turner",
+      "createdAt": "2025-05-05T14:00:00.000Z",
+      "updatedAt": "2025-05-05T14:00:00.000Z"
+    },
+    {
+      "id": 13,
+      "title": "Logging Best Practices in Node.js",
+      "slug": "logging-best-practices-in-nodejs",
+      "excerpt": "Structured logging with levels, correlation IDs, and output destinations improves observability.",
+      "content": "<p>Logging shouldn't just be console output. Use structured loggers like <code>pino</code> or <code>winston</code> to emit JSON logs with timestamps and levels.</p><p>Best practices:</p><ul><li>Use log levels (debug, info, warn, error)</li><li>Add request IDs for tracing</li><li>Avoid logging sensitive data</li><li>Ship logs to aggregation tools</li></ul><p>Meaningful logs accelerate incident resolution.</p>",
+      "author": "Daniel Green",
+      "createdAt": "2025-05-10T09:55:00.000Z",
+      "updatedAt": "2025-05-10T09:55:00.000Z"
+    },
+    {
+      "id": 14,
+      "title": "Rate Limiting Techniques",
+      "slug": "rate-limiting-techniques",
+      "excerpt": "Prevent abuse and protect resources with IP-based and token bucket rate limiting.",
+      "content": "<p>Rate limiting defends against denial-of-service and brute-force attacks. Common strategies include fixed window, sliding window, and token bucket algorithms. Libraries like <code>express-rate-limit</code> simplify implementation.</p><p>Considerations:</p><ul><li>Separate limits by route sensitivity</li><li>Store counters in Redis for multi-instance deployment</li><li>Return informative headers (<code>X-RateLimit-Remaining</code>)</li><li>Log excessive violation attempts</li></ul><p>Thoughtful limits balance protection and usability.</p>",
+      "author": "Emily Carter",
+      "createdAt": "2025-05-15T13:35:00.000Z",
+      "updatedAt": "2025-05-15T13:35:00.000Z"
+    },
+    {
+      "id": 15,
+      "title": "Authentication vs Authorization",
+      "slug": "authentication-vs-authorization",
+      "excerpt": "Clarify the distinction: authentication verifies identity; authorization governs access rights.",
+      "content": "<p>Authentication answers 'Who are you?' while authorization answers 'What are you allowed to do?' Implement authentication with passwords, OAuth, or tokens. Authorization can be role-based (RBAC) or attribute-based (ABAC).</p><p>Good design:</p><ul><li>Centralize permission checks</li><li>Avoid hardcoding roles deep in business logic</li><li>Favor stateless JWTs or short-lived sessions with refresh flows</li><li>Audit permission changes</li></ul><p>A clear separation avoids security holes.</p>",
+      "author": "Laura Nguyen",
+      "createdAt": "2025-05-18T11:15:00.000Z",
+      "updatedAt": "2025-05-18T11:15:00.000Z"
+    },
+    {
+      "id": 16,
+      "title": "Caching Strategies for APIs",
+      "slug": "caching-strategies-for-apis",
+      "excerpt": "Use in-memory, Redis, and HTTP caching headers to reduce latency and load.",
+      "content": "<p>Caching reduces repeated expensive operations. Techniques include in-memory caches for transient data, Redis for shared multi-instance caches, and HTTP headers (<code>ETag</code>, <code>Cache-Control</code>) for client-side efficiency.</p><p>Guidelines:</p><ul><li>Cache only deterministic results</li><li>Set appropriate TTLs</li><li>Invalidate on data changes</li><li>Instrument cache hit rate</li></ul><p>Strategic caching boosts scalability.</p>",
+      "author": "Michael Brown",
+      "createdAt": "2025-05-22T10:50:00.000Z",
+      "updatedAt": "2025-05-22T10:50:00.000Z"
+    },
+    {
+      "id": 17,
+      "title": "Graceful Shutdown in Node.js",
+      "slug": "graceful-shutdown-in-nodejs",
+      "excerpt": "Handle SIGTERM/SIGINT to close connections and flush logs before exiting.",
+      "content": "<p>Graceful shutdown allows the application to finish in-flight requests when terminating. Listen for <code>process.on('SIGTERM')</code> and stop accepting new connections, then close servers and database pools.</p><p>Steps:</p><ul><li>Track open connections</li><li>Set a max timeout before forcing exit</li><li>Flush buffered logs</li><li>Exit with appropriate status code</li></ul><p>This prevents data corruption and improves reliability.</p>",
+      "author": "Sophia Turner",
+      "createdAt": "2025-05-25T17:05:00.000Z",
+      "updatedAt": "2025-05-25T17:05:00.000Z"
+    },
+    {
+      "id": 18,
+      "title": "Scheduling Tasks in Node.js",
+      "slug": "scheduling-tasks-in-nodejs",
+      "excerpt": "Use cron-like libraries or queues to execute recurring and delayed jobs.",
+      "content": "<p>Task scheduling handles recurring operations like backups or email digests. Libraries like <code>node-cron</code> or queue systems (Bull, Agenda) manage timing and persistence.</p><p>Best practices:</p><ul><li>Externalize schedule configuration</li><li>Avoid long blocking tasks in request handlers</li><li>Monitor job success/failures</li><li>Use queues for retry and delay features</li></ul><p>Proper scheduling improves architectural cleanliness.</p>",
+      "author": "Daniel Green",
+      "createdAt": "2025-05-28T09:30:00.000Z",
+      "updatedAt": "2025-05-28T09:30:00.000Z"
+    },
+    {
+      "id": 19,
+      "title": "Understanding Event Loop Phases",
+      "slug": "understanding-event-loop-phases",
+      "excerpt": "Microtasks, timers, I/O callbacks, and check phases influence execution order.",
+      "content": "<p>The Node.js event loop coordinates asynchronous operations. Phases include timers, pending callbacks, idle/prepare, poll, check, and close callbacks. Microtasks (promises) run between phases.</p><p>Implications:</p><ul><li>Prefer non-blocking operations</li><li>Understand ordering for complex flows</li><li>Avoid blocking the poll phase</li><li>Profile with <code>--trace-events</code> or tools</li></ul><p>Mastering the loop helps performance tuning.</p>",
+      "author": "Emily Carter",
+      "createdAt": "2025-06-01T08:40:00.000Z",
+      "updatedAt": "2025-06-01T08:40:00.000Z"
+    },
+    {
+      "id": 20,
+      "title": "Choosing a Template Engine",
+      "slug": "choosing-a-template-engine",
+      "excerpt": "Compare Nunjucks, EJS, Handlebars, and Pug for server-rendered HTML needs.",
+      "content": "<p>Template engines differ in syntax philosophy and feature sets. Nunjucks offers powerful inheritance and is Jinja-like. EJS is lightweight and logic-friendly. Handlebars emphasizes logicless templates, while Pug uses indentation-based syntax.</p><p>Considerations:</p><ul><li>Team familiarity and learning curve</li><li>Performance requirements</li><li>Extensibility via filters/helpers</li><li>Security (autoescaping behavior)</li></ul><p>Select the engine aligning with project constraints.</p>",
+      "author": "Laura Nguyen",
+      "createdAt": "2025-06-05T12:15:00.000Z",
+      "updatedAt": "2025-06-05T12:15:00.000Z"
+    }
+  ],
+  "nextId": 21
+}

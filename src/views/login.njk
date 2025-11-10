@@ -1,0 +1,64 @@
+{# Login Page Template / Login-Seiten-Template #} {# Admin authentication form /
+Admin-Authentifizierungsformular #} {# Rendered by: authController.showLogin() /
+Gerendert von: authController.showLogin() #} {# Form submits to: POST /login
+(authController.handleLogin) #} {# Formular sendet an: POST /login
+(authController.handleLogin) #} {# Variables: error (optional, shown if login
+fails) #} {# Variablen: error (optional, angezeigt wenn Login fehlschlägt) #} {%
+extends "layout.njk" %} {% block content %}
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          {# Login form title with lock icon / Login-Formular-Titel mit
+          Schloss-Icon #}
+          <h3 class="card-title text-center mb-4">
+            <i class="bi bi-shield-lock"></i> Admin Login
+          </h3>
+
+          {# Error message alert - shown if login failed /
+          Fehlermeldungs-Warnung - angezeigt wenn Login fehlschlug #} {# Set by:
+          authController.handleLogin() when password is incorrect #} {# Gesetzt
+          von: authController.handleLogin() wenn Passwort falsch ist #} {% if
+          error %}
+          <div class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+          {% endif %} {# Login form - POST to /login / Login-Formular - POST an
+          /login #}
+          <form action="/login" method="POST">
+            <div class="mb-3">
+              {# Password field - checked against ADMIN_PASSWORD in .env #} {#
+              Passwort-Feld - überprüft gegen ADMIN_PASSWORD in .env #}
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Enter admin password"
+                required
+                autofocus
+              />
+            </div>
+
+            {# Submit button / Absende-Schaltfläche #}
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+              </button>
+            </div>
+          </form>
+
+          {# Back to public site link / Zurück zur öffentlichen Seite Link #}
+          <div class="text-center mt-3">
+            <a href="/" class="text-muted small">
+              <i class="bi bi-arrow-left"></i> Back to site
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{# Blog Posts List - Public View / Blog-Beitragsliste - Öffentliche Ansicht #}
+{# Displays all blog posts in a grid with pagination #} {# Zeigt alle
+Blog-Beiträge in einem Raster mit Paginierung an #} {# Rendered by:
+postController.index() / Gerendert von: postController.index() #} {# Variables:
+posts (array), currentPage, totalPages, hasPrevious, hasNext #} {# Variablen:
+posts (Array), currentPage, totalPages, hasPrevious, hasNext #} {% extends
+"layout.njk" %} {% block content %}
+<div class="container">
+  {# Page heading / Seitenüberschrift #}
+  <h1 class="mb-4">Blog Posts</h1>
+
+  {# No posts message / Keine-Beiträge-Nachricht #} {% if posts.length === 0 %}
+  <div class="alert alert-info">No blog posts available yet.</div>
+  {% else %} {# Posts grid - responsive: 1 column on mobile, 2 on tablet, 3 on
+  desktop #} {# Beitrags-Raster - responsiv: 1 Spalte auf Mobil, 2 auf Tablet, 3
+  auf Desktop #}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {# Loop through each post / Durchlaufe jeden Beitrag #} {% for post in posts
+    %}
+    <div class="col">
+      {# Post card / Beitragskarte #}
+      <div class="card h-100">
+        <div class="card-body">
+          {# Post title - links to full post / Beitragstitel - verlinkt zu
+          vollständigem Beitrag #}
+          <h5 class="card-title">
+            <a href="/posts/{{ post.slug }}" class="text-decoration-none">{{
+              post.title
+            }}</a>
+          </h5>
+
+          {# Post metadata: author and date / Beitrags-Metadaten: Autor und
+          Datum #}
+          <p class="card-text text-muted small">
+            <i class="bi bi-person"></i> {{ post.author }} |
+            <i class="bi bi-calendar"></i>
+            {# Format date using custom Nunjucks filter / Formatiere Datum mit
+            benutzerdefiniertem Nunjucks-Filter #}
+            {{ post.createdAt | date('MMMM D, YYYY') }}
+          </p>
+
+          {# Post excerpt / Beitragsauszug #}
+          <p class="card-text">{{ post.excerpt }}</p>
+        </div>
+
+        {# Card footer with "Read more" link / Karten-Fußzeile mit "Mehr lesen"
+        Link #}
+        <div class="card-footer bg-transparent">
+          <a href="/posts/{{ post.slug }}" class="btn btn-sm btn-primary"
+            >Read more →</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %} {# Pagination controls - only show if more than 1 page #} {#
+  Paginierungssteuerung - nur anzeigen wenn mehr als 1 Seite #} {% if totalPages
+  > 1 %}
+  <nav aria-label="Blog posts pagination" class="mt-4">
+    <ul class="pagination justify-content-center">
+      {# Previous page button / Vorherige Seite Schaltfläche #}
+      <li class="page-item {% if not hasPrevious %}disabled{% endif %}">
+        <a
+          class="page-link"
+          href="/posts?page={{ currentPage - 1 }}"
+          {%
+          if
+          not
+          hasPrevious
+          %}tabindex="-1"
+          {%
+          endif
+          %}
+        >
+          Previous
+        </a>
+      </li>
+
+      {# Page number buttons / Seitennummer-Schaltflächen #} {% for pageNum in
+      range(1, totalPages + 1) %}
+      <li class="page-item {% if pageNum === currentPage %}active{% endif %}">
+        <a class="page-link" href="/posts?page={{ pageNum }}">{{ pageNum }}</a>
+      </li>
+      {% endfor %} {# Next page button / Nächste Seite Schaltfläche #}
+      <li class="page-item {% if not hasNext %}disabled{% endif %}">
+        <a
+          class="page-link"
+          href="/posts?page={{ currentPage + 1 }}"
+          {%
+          if
+          not
+          hasNext
+          %}tabindex="-1"
+          {%
+          endif
+          %}
+        >
+          Next
+        </a>
+      </li>
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

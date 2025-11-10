@@ -1,0 +1,22 @@
+{# Error Page Template / Fehlerseiten-Template #} {# Displays error messages for
+404, 500, and other errors #} {# Zeigt Fehlermeldungen für 404, 500 und andere
+Fehler an #} {# Used by: app.ts error handlers / Verwendet von: app.ts
+Fehler-Handler #} {# Variables: message (error description), error.status (HTTP
+status code) #} {# Variablen: message (Fehlerbeschreibung), error.status
+(HTTP-Statuscode) #} {% extends "layout.njk" %} {% block content %}
+<div class="container text-center my-5">
+  {# Display error status code or generic "Error" / Zeige Fehlerstatuscode oder
+  generisches "Error" #}
+  <h1 class="display-1">
+    {% if error.status %}{{ error.status }}{% else %}Error{% endif %}
+  </h1>
+
+  {# Error message from controller / Fehlermeldung vom Controller #} {#
+  Examples: "Post not found", "Page not found", "Something went wrong!" #} {#
+  Beispiele: "Post not found", "Page not found", "Something went wrong!" #}
+  <p class="lead">{{ message }}</p>
+
+  {# Link back to homepage / Link zurück zur Startseite #}
+  <a href="/" class="btn btn-primary mt-3">Go back home</a>
+</div>
+{% endblock %}

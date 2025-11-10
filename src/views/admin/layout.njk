@@ -1,0 +1,102 @@
+{# Admin Layout Template - Protected Pages / Admin-Layout-Template - Geschützte
+Seiten #} {# Base template for all admin panel pages / Basistemplate für alle
+Admin-Panel-Seiten #} {# Used by: admin/posts/index.njk, admin/posts/edit.njk #}
+{# Verwendet von: admin/posts/index.njk, admin/posts/edit.njk #} {# All pages
+using this layout require authentication / Alle Seiten die dieses Layout
+verwenden erfordern Authentifizierung #}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {# Page title block / Seitentitel-Block #}
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+
+    {# Bootstrap CSS framework / Bootstrap CSS-Framework #}
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    {# Bootstrap Icons / Bootstrap-Icons #}
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+
+    {# Custom styles for admin panel / Benutzerdefinierte Stile für Admin-Panel
+    #}
+    <style>
+      /* Sidebar styling / Sidebar-Styling */
+      .sidebar {
+        min-height: calc(
+          100vh - 56px
+        ); /* Full height minus navbar / Volle Höhe minus Navbar */
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1); /* Right border shadow / Rechter Rand-Schatten */
+      }
+      /* Main content area / Hauptinhaltsbereich */
+      main {
+        padding-top: 2rem;
+      }
+    </style>
+    {# Additional head content / Zusätzlicher Head-Inhalt #} {% block head %}{%
+    endblock %}
+  </head>
+  <body>
+    {# Admin navbar - different from public navbar / Admin-Navbar - anders als
+    öffentliche Navbar #}
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid">
+        {# Admin panel logo/title / Admin-Panel-Logo/Titel #}
+        <a class="navbar-brand" href="/admin/posts">
+          <i class="bi bi-shield-lock"></i> Admin Panel
+        </a>
+
+        {# Action buttons / Aktions-Schaltflächen #}
+        <div class="d-flex">
+          {# Logout button - destroys session / Logout-Schaltfläche - zerstört
+          Sitzung #}
+          <a href="/logout" class="btn btn-outline-light btn-sm me-2">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </a>
+          {# View public site button / Öffentliche Seite anzeigen Schaltfläche
+          #}
+          <a href="/" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-box-arrow-left"></i> View Site
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        {# Sidebar navigation / Sidebar-Navigation #}
+        <nav class="col-md-2 d-md-block bg-light sidebar">
+          <div class="position-sticky pt-3">
+            <ul class="nav flex-column">
+              {# Posts management link / Beitragsverwaltungs-Link #}
+              <li class="nav-item">
+                <a class="nav-link active" href="/admin/posts">
+                  <i class="bi bi-file-text"></i> Posts
+                </a>
+              </li>
+              {# Future menu items can be added here / Zukünftige Menüpunkte
+              können hier hinzugefügt werden #}
+            </ul>
+          </div>
+        </nav>
+
+        {# Main content area - filled by child templates / Hauptinhaltsbereich -
+        gefüllt von Kind-Templates #}
+        <main class="col-md-10 ms-sm-auto px-md-4">
+          {% block content %}{% endblock %}
+        </main>
+      </div>
+    </div>
+
+    {# Bootstrap JavaScript / Bootstrap JavaScript #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {# Additional scripts block / Zusätzlicher Skript-Block #} {% block scripts
+    %}{% endblock %}
+  </body>
+</html>

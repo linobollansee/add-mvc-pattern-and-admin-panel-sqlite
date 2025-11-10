@@ -1,0 +1,42 @@
+{# Single Blog Post View - Public / Einzelner Blog-Beitrag Ansicht - Öffentlich
+#} {# Displays full content of a single blog post #} {# Zeigt vollständigen
+Inhalt eines einzelnen Blog-Beitrags an #} {# Rendered by: postController.show()
+/ Gerendert von: postController.show() #} {# Route: GET /posts/:slug / Route:
+GET /posts/:slug #} {# Variables: post (complete Post object with all fields) #}
+{# Variablen: post (vollständiges Post-Objekt mit allen Feldern) #} {% extends
+"layout.njk" %} {% block content %}
+<article class="container">
+  {# Article header with title and metadata / Artikel-Kopfzeile mit Titel und
+  Metadaten #}
+  <header class="mb-4">
+    {# Post title / Beitragstitel #}
+    <h1 class="display-4">{{ post.title }}</h1>
+
+    {# Post metadata: author and dates / Beitrags-Metadaten: Autor und Daten #}
+    <p class="text-muted">
+      <i class="bi bi-person"></i> {{ post.author }} |
+      <i class="bi bi-calendar"></i> {{ post.createdAt | date('MMMM D, YYYY') }}
+      {# Show "Updated" date if post was modified / Zeige "Aktualisiert" Datum
+      wenn Beitrag geändert wurde #} {% if post.updatedAt !== post.createdAt %}
+      <span class="text-muted small"
+        >(Updated: {{ post.updatedAt | date('MMMM D, YYYY') }})</span
+      >
+      {% endif %}
+    </p>
+  </header>
+
+  {# Post content - HTML rendered with | safe filter #} {# Beitragsinhalt - HTML
+  gerendert mit | safe Filter #} {# Content is sanitized in postModel.ts before
+  storage #} {# Inhalt wird in postModel.ts vor Speicherung bereinigt #}
+  <div class="post-content">
+    {{ post.content | safe }}
+  </div>
+
+  {# Footer with back link / Fußzeile mit Zurück-Link #}
+  <footer class="mt-4">
+    <a href="/posts" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Back to all posts
+    </a>
+  </footer>
+</article>
+{% endblock %}

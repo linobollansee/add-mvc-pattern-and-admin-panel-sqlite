@@ -1,0 +1,42 @@
+{
+  "name": "blog-mvc-admin",
+  "version": "1.0.0",
+  "description": "Blog with MVC pattern and admin panel",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "xcopy /E /I /Y src\\views dist\\views && xcopy /E /I /Y src\\data dist\\data",
+    "start": "node dist/app.js",
+    "dev": "nodemon --exec ts-node src/app.ts",
+    "watch": "tsc --watch",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean"
+  },
+  "keywords": [
+    "blog",
+    "mvc",
+    "express",
+    "nunjucks"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "nunjucks": "^3.2.4",
+    "sanitize-html": "^2.11.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/express-session": "^1.18.2",
+    "@types/node": "^24.10.0",
+    "@types/nunjucks": "^3.2.6",
+    "@types/sanitize-html": "^2.16.0",
+    "nodemon": "^3.0.1",
+    "rimraf": "^6.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
