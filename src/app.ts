@@ -7,16 +7,23 @@ import session from "express-session";
 import dotenv from "dotenv";
 import nunjucks from "nunjucks";
 import path from "path";
+// Import database and initialize / Importiere Datenbank und initialisiere
+import { initializeDatabase } from "./config/database";
 // Import route modules - each handles a specific part of the application
 // Importiere Routen-Module - jedes behandelt einen spezifischen Teil der Anwendung
 import postRoutes from "./routes/postRoutes"; // Public-facing blog post routes / Öffentliche Blog-Beitrags-Routen
 import adminRoutes from "./routes/adminRoutes"; // Protected admin panel routes / Geschützte Admin-Panel-Routen
+import authorRoutes from "./routes/authorRoutes"; // Protected author management routes / Geschützte Autoren-Verwaltungs-Routen
 import authRoutes from "./routes/authRoutes"; // Authentication (login/logout) / Authentifizierung (Login/Logout)
 import "./types/Session"; // TypeScript session type extensions / TypeScript-Sitzungstyp-Erweiterungen
 
 // Load environment variables from .env file (SESSION_SECRET, ADMIN_PASSWORD, etc.)
 // Lade Umgebungsvariablen aus .env-Datei (SESSION_SECRET, ADMIN_PASSWORD, etc.)
 dotenv.config();
+
+// Initialize database (create tables if they don't exist)
+// Initialisiere Datenbank (erstelle Tabellen wenn sie nicht existieren)
+initializeDatabase();
 
 // Create Express application instance / Erstelle Express-Anwendungsinstanz
 const app = express();
@@ -143,6 +150,11 @@ app.use("/posts", postRoutes);
 // Admin-Panel: /admin/posts, /admin/posts/:id/edit, etc.
 // All routes protected by requireAuth middleware / Alle Routen geschützt durch requireAuth-Middleware
 app.use("/admin", adminRoutes);
+
+// Author management: /admin/authors, /admin/authors/:id/edit, etc.
+// Autoren-Verwaltung: /admin/authors, /admin/authors/:id/edit, etc.
+// All routes protected by requireAuth middleware / Alle Routen geschützt durch requireAuth-Middleware
+app.use("/admin", authorRoutes);
 
 // ERROR HANDLERS / FEHLER-HANDLER
 // These must come AFTER all routes / Diese müssen NACH allen Routen kommen
