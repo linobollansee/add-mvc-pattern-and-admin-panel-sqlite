@@ -17,8 +17,8 @@ export async function index(req: Request, res: Response): Promise<void> {
     // Hole Seite aus URL-Abfrageparameter ?page=2, Standard ist 1
     const page = parseInt(req.query.page as string) || 1;
     const limit = 6; // Posts per page on public blog / Beiträge pro Seite im öffentlichen Blog
-    // Fetch all posts from data/posts.json / Hole alle Beiträge aus data/posts.json
-    const allPosts = await postModel.getAllPosts();
+    // Fetch all posts from database / Hole alle Beiträge aus Datenbank
+    const allPosts = postModel.getAllPosts();
 
     // Calculate pagination values / Berechne Paginierungswerte
     const totalPosts = allPosts.length; // Total number of posts / Gesamtzahl der Beiträge
@@ -53,7 +53,7 @@ export async function index(req: Request, res: Response): Promise<void> {
 export async function show(req: Request, res: Response): Promise<void> {
   try {
     // Find post by slug from URL parameter / Finde Beitrag anhand Slug aus URL-Parameter
-    const post = await postModel.getPostBySlug(req.params.slug);
+    const post = postModel.getPostBySlug(req.params.slug);
 
     // Post not found - show 404 error / Beitrag nicht gefunden - zeige 404-Fehler
     if (!post) {
