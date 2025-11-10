@@ -28,5 +28,9 @@ coverage/
 *.swp
 *.swo
 
+# Database
+*.sqlite
+*.db
+
 # Optional: ignore data if you want
 # src/data/*.json
