@@ -14,8 +14,9 @@ GET /posts/:slug #} {# Variables: post (complete Post object with all fields) #}
 
     {# Post metadata: author and dates / Beitrags-Metadaten: Autor und Daten #}
     <p class="text-muted">
-      <i class="bi bi-person"></i> {{ post.author }} |
-      <i class="bi bi-calendar"></i> {{ post.createdAt | date('MMMM D, YYYY') }}
+      <i class="bi bi-person"></i> {% if post.author %}{{ post.author.name }}{%
+      else %}Anonymous{% endif %} | <i class="bi bi-calendar"></i>
+      {{ post.createdAt | date('MMMM D, YYYY') }}
       {# Show "Updated" date if post was modified / Zeige "Aktualisiert" Datum
       wenn Beitrag geändert wurde #} {% if post.updatedAt !== post.createdAt %}
       <span class="text-muted small"
