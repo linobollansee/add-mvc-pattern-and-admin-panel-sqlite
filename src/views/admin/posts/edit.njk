@@ -102,17 +102,27 @@ Modus #}
       <div class="card">
         <div class="card-header">Post Settings</div>
         <div class="card-body">
-          {# Author field / Autor-Feld #}
+          {# Author dropdown field / Autoren-Dropdown-Feld #}
           <div class="mb-3">
-            <label for="author" class="form-label">Author *</label>
-            <input
-              type="text"
-              class="form-control"
-              id="author"
-              name="author"
-              value="{{ post.author if post else 'Anonymous' }}"
-              required
-            />
+            <label for="author_id" class="form-label">Author</label>
+            <select
+              class="form-select"
+              id="author_id"
+              name="author_id"
+            >
+              <option value="">No Author</option>
+              {% for author in authors %}
+              <option
+                value="{{ author.id }}"
+                {% if post and post.author_id == author.id %}selected{% endif %}
+              >
+                {{ author.name }}
+              </option>
+              {% endfor %}
+            </select>
+            <div class="form-text">
+              Select the author for this post
+            </div>
           </div>
 
           {# Metadata - only shown when editing existing post #} {# Metadaten -

@@ -77,7 +77,10 @@ Seitenkopf mit Titel und "Neuer Beitrag" Schaltfläche #}
         </td>
 
         {# Post author / Beitragsautor #}
-        <td>{{ post.author }}</td>
+        <td>
+          {% if post.author %}{{ post.author.name }}{% else %}<em>No Author</em
+          >{% endif %}
+        </td>
 
         {# Creation date / Erstellungsdatum #}
         <td>{{ post.createdAt | date('MMM D, YYYY') }}</td>
