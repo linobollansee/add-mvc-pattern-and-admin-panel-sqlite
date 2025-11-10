@@ -6,6 +6,7 @@
 
 import { Request, Response } from "express";
 import * as postModel from "../models/postModel"; // Import database functions / Importiere Datenbankfunktionen
+import * as authorModel from "../models/authorModel"; // Import author functions / Importiere Autoren-Funktionen
 
 // Display admin dashboard with all posts / Zeige Admin-Dashboard mit allen Beiträgen an
 // Route: GET /admin/posts / Route: GET /admin/posts
@@ -25,10 +26,10 @@ export async function index(req: Request, res: Response): Promise<void> {
     // Wenn Suche, filtere Beiträge; andernfalls hole alle
     if (searchQuery) {
       // Search in title/excerpt/content / Suche in Titel/Auszug/Inhalt
-      allPosts = await postModel.searchPosts(searchQuery);
+      allPosts = postModel.searchPosts(searchQuery);
     } else {
       // Get all posts / Hole alle Beiträge
-      allPosts = await postModel.getAllPosts();
+      allPosts = postModel.getAllPosts();
     }
 
     // Calculate pagination values / Berechne Paginierungswerte
@@ -61,10 +62,14 @@ export async function index(req: Request, res: Response): Promise<void> {
 // Route: GET /admin/posts/new / Route: GET /admin/posts/new
 // View: views/admin/posts/edit.njk (empty form) / Ansicht: views/admin/posts/edit.njk (leeres Formular)
 export async function create(_req: Request, res: Response): Promise<void> {
+  // Get all authors for dropdown / Hole alle Autoren für Dropdown
+  const authors = authorModel.getAllAuthors();
+
   // Render edit form with no post data (null = new post, not editing existing)
   // Rendere Bearbeitungsformular ohne Beitragsdaten (null = neuer Beitrag, nicht vorhandenen bearbeiten)
   res.render("admin/posts/edit.njk", {
     post: null, // null indicates new post creation / null zeigt neue Beitragserstellung an
+    authors, // List of all authors / Liste aller Autoren
     title: "Admin - Create Post", // Page title / Seitentitel
   });
 }
@@ -77,25 +82,27 @@ export async function create(_req: Request, res: Response): Promise<void> {
 export async function store(req: Request, res: Response): Promise<void> {
   try {
     // Extract form fields / Extrahiere Formularfelder
-    const { title, excerpt, content, author } = req.body;
+    const { title, excerpt, content, author_id } = req.body;
 
     // Validate required fields / Validiere Pflichtfelder
     if (!title || !excerpt || !content) {
+      const authors = authorModel.getAllAuthors();
       res.status(400).render("admin/posts/edit.njk", {
         post: req.body, // Preserve user's input / Behalte Benutzereingabe
+        authors, // List of all authors / Liste aller Autoren
         error: "Title, excerpt, and content are required", // Error message / Fehlermeldung
         title: "Admin - Create Post", // Page title / Seitentitel
       });
       return;
     }
 
-    // Create post in database (posts.json via postModel)
-    // Erstelle Beitrag in Datenbank (posts.json über postModel)
-    const newPost = await postModel.createPost({
+    // Create post in database (SQLite via postModel)
+    // Erstelle Beitrag in Datenbank (SQLite über postModel)
+    const newPost = postModel.createPost({
       title,
       excerpt,
       content,
-      author,
+      author_id: author_id ? parseInt(author_id) : null,
     });
 
     if (newPost) {
@@ -107,8 +114,10 @@ export async function store(req: Request, res: Response): Promise<void> {
   } catch (error) {
     // Error occurred, log and re-render form / Fehler aufgetreten, protokolliere und rendere Formular neu
     console.error("Error creating post:", error);
+    const authors = authorModel.getAllAuthors();
     res.status(500).render("admin/posts/edit.njk", {
       post: req.body, // Preserve user's input / Behalte Benutzereingabe
+      authors, // List of all authors / Liste aller Autoren
       error: "Error creating post", // Error message / Fehlermeldung
       title: "Admin - Create Post", // Page title / Seitentitel
     });
@@ -122,7 +131,7 @@ export async function store(req: Request, res: Response): Promise<void> {
 export async function edit(req: Request, res: Response): Promise<void> {
   try {
     // Fetch post by ID from URL parameter / Hole Beitrag anhand ID aus URL-Parameter
-    const post = await postModel.getPostById(req.params.id);
+    const post = postModel.getPostById(req.params.id);
 
     // Post not found - show 404 / Beitrag nicht gefunden - zeige 404
     if (!post) {
@@ -133,9 +142,13 @@ export async function edit(req: Request, res: Response): Promise<void> {
       return;
     }
 
+    // Get all authors for dropdown / Hole alle Autoren für Dropdown
+    const authors = authorModel.getAllAuthors();
+
     // Render edit form with existing post data / Rendere Bearbeitungsformular mit vorhandenen Beitragsdaten
     res.render("admin/posts/edit.njk", {
       post, // Post object to populate form fields / Post-Objekt zum Füllen der Formularfelder
+      authors, // List of all authors / Liste aller Autoren
       title: `Admin - Edit Post: ${post.title}`, // Page title / Seitentitel
     });
   } catch (error) {
@@ -156,25 +169,27 @@ export async function edit(req: Request, res: Response): Promise<void> {
 export async function update(req: Request, res: Response): Promise<void> {
   try {
     // Extract form fields / Extrahiere Formularfelder
-    const { title, excerpt, content, author } = req.body;
+    const { title, excerpt, content, author_id } = req.body;
 
     // Validate required fields / Validiere Pflichtfelder
     if (!title || !excerpt || !content) {
+      const authors = authorModel.getAllAuthors();
       res.status(400).render("admin/posts/edit.njk", {
         post: { ...req.body, id: req.params.id }, // Preserve user's input with ID / Behalte Benutzereingabe mit ID
+        authors, // List of all authors / Liste aller Autoren
         error: "Title, excerpt, and content are required", // Error message / Fehlermeldung
         title: "Admin - Edit Post", // Page title / Seitentitel
       });
       return;
     }
 
-    // Update post in database (posts.json via postModel)
-    // Aktualisiere Beitrag in Datenbank (posts.json über postModel)
-    const updatedPost = await postModel.updatePost(req.params.id, {
+    // Update post in database (SQLite via postModel)
+    // Aktualisiere Beitrag in Datenbank (SQLite über postModel)
+    const updatedPost = postModel.updatePost(req.params.id, {
       title,
       excerpt,
       content,
-      author,
+      author_id: author_id ? parseInt(author_id) : null,
     });
 
     if (updatedPost) {
@@ -186,8 +201,10 @@ export async function update(req: Request, res: Response): Promise<void> {
   } catch (error) {
     // Error occurred, log and re-render form / Fehler aufgetreten, protokolliere und rendere Formular neu
     console.error("Error updating post:", error);
+    const authors = authorModel.getAllAuthors();
     res.status(500).render("admin/posts/edit.njk", {
       post: { ...req.body, id: req.params.id }, // Preserve user's input with ID / Behalte Benutzereingabe mit ID
+      authors, // List of all authors / Liste aller Autoren
       error: "Error updating post", // Error message / Fehlermeldung
       title: "Admin - Edit Post", // Page title / Seitentitel
     });
@@ -201,7 +218,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 export async function destroy(req: Request, res: Response): Promise<void> {
   try {
     // Delete post from database by ID / Lösche Beitrag aus Datenbank anhand ID
-    const success = await postModel.deletePost(req.params.id);
+    const success = postModel.deletePost(req.params.id);
 
     if (success) {
       // Success - go back to post list / Erfolg - gehe zurück zur Beitragsliste
