@@ -1,0 +1,130 @@
+{
+  "name": "blog-mvc-admin",
+  "version": "1.0.0",
+  "description": "Blog with MVC pattern and admin panel",
+  "main": "dist/app.js",
+  "scripts": {
+    "// Development": "",
+    "dev": "nodemon --exec ts-node -r dotenv/config src/app.ts",
+    "dev:watch": "concurrently \"npm:watch:ts\" \"npm:watch:assets\" \"npm:dev\"",
+    "watch:ts": "tsc --watch --preserveWatchOutput",
+    "watch:assets": "nodemon --watch src/public --watch src/views --ext css,js,njk --exec npm run copy:assets",
+    
+    "// Building": "",
+    "prebuild": "npm run clean && npm run lint",
+    "build": "tsc --project tsconfig.build.json",
+    "postbuild": "npm run copy:assets && npm run copy:data",
+    "build:prod": "cross-env NODE_ENV=production npm run build",
+    "copy:assets": "node scripts/copy-assets.js",
+    "copy:data": "node scripts/copy-data.js",
+    
+    "// Running": "",
+    "start": "node dist/app.js",
+    "start:prod": "cross-env NODE_ENV=production node dist/app.js",
+    "start:dev": "node -r dotenv/config dist/app.js",
+    
+    "// Database": "",
+    "db:migrate": "ts-node scripts/migrate.ts",
+    "db:migrate:prod": "node dist/scripts/migrate.js",
+    "db:seed": "ts-node scripts/seed.ts",
+    "db:seed:prod": "node dist/scripts/seed.js",
+    "db:reset": "npm run db:migrate && npm run db:seed",
+    "db:backup": "node scripts/backup-db.js",
+    
+    "// Testing": "",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathPattern=tests/unit",
+    "test:integration": "jest --testPathPattern=tests/integration",
+    "test:e2e": "jest --testPathPattern=tests/e2e",
+    
+    "// Code Quality": "",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write \"src/**/*.{ts,js,json,njk}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json,njk}\"",
+    "type-check": "tsc --noEmit",
+    
+    "// Utilities": "",
+    "clean": "rimraf dist coverage",
+    "clean:all": "rimraf dist coverage node_modules",
+    "prepare": "husky install",
+    "validate": "npm run type-check && npm run lint && npm run test",
+    
+    "// Production": "",
+    "deploy": "npm run build:prod && npm run db:migrate:prod",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop blog-mvc-admin",
+    "pm2:restart": "pm2 restart blog-mvc-admin",
+    "pm2:logs": "pm2 logs blog-mvc-admin"
+  },
+  "keywords": [
+    "blog",
+    "mvc",
+    "express",
+    "nunjucks"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^12.4.1",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "nunjucks": "^3.2.4",
+    "sanitize-html": "^2.11.0",
+    "helmet": "^8.0.0",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0",
+    "winston": "^3.11.0",
+    "express-rate-limit": "^7.1.5",
+    "csurf": "^1.11.0",
+    "cookie-parser": "^1.4.6",
+    "express-validator": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/express": "^5.0.5",
+    "@types/express-session": "^1.18.2",
+    "@types/node": "^24.10.0",
+    "@types/nunjucks": "^3.2.6",
+    "@types/sanitize-html": "^2.16.0",
+    "@types/compression": "^1.7.5",
+    "@types/morgan": "^1.9.9",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/jest": "^29.5.11",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.4",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "supertest": "^6.3.4",
+    "@types/supertest": "^6.0.2",
+    "nodemon": "^3.0.1",
+    "rimraf": "^6.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "pm2": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,njk}": [
+      "prettier --write"
+    ]
+  }
+}
