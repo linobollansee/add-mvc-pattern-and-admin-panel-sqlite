@@ -21,14 +21,24 @@ import "./types/Session"; // TypeScript session type extensions / TypeScript-Sit
 // Lade Umgebungsvariablen aus .env-Datei (SESSION_SECRET, ADMIN_PASSWORD, etc.)
 dotenv.config();
 
-// Initialize database (create tables if they don't exist)
-// Initialisiere Datenbank (erstelle Tabellen wenn sie nicht existieren)
-initializeDatabase();
+// Validate required environment variables / Validiere erforderliche Umgebungsvariablen
+if (!process.env.SESSION_SECRET) {
+  console.warn(
+    "⚠️  WARNING: SESSION_SECRET not set in .env file. Using default (not secure for production)"
+  );
+}
+
+if (!process.env.ADMIN_PASSWORD) {
+  console.error("❌ ERROR: ADMIN_PASSWORD must be set in .env file");
+  process.exit(1);
+}
+
+// Environment configuration / Umgebungskonfiguration
+const isProduction = process.env.NODE_ENV === "production";
+const port = parseInt(process.env.PORT || "3000");
 
 // Create Express application instance / Erstelle Express-Anwendungsinstanz
 const app = express();
-// Server port configuration / Server-Port-Konfiguration
-const port = 3000;
 
 // TEMPLATE ENGINE SETUP / TEMPLATE-ENGINE-EINRICHTUNG
 // Configure Nunjucks to render .njk template files / Konfiguriere Nunjucks zum Rendern von .njk-Template-Dateien
@@ -38,7 +48,8 @@ const port = 3000;
 const env = nunjucks.configure(path.join(__dirname, "views"), {
   autoescape: true, // Prevents XSS attacks by escaping HTML / Verhindert XSS-Angriffe durch HTML-Escaping
   express: app, // Integrate with Express / Integriere mit Express
-  watch: true, // Auto-reload templates in development / Automatisches Neuladen von Templates in Entwicklung
+  watch: !isProduction, // Only watch in development / Nur in Entwicklung beobachten
+  noCache: !isProduction, // Disable cache in development / Cache in Entwicklung deaktivieren
 });
 
 // CUSTOM NUNJUCKS FILTERS / BENUTZERDEFINIERTE NUNJUCKS-FILTER
@@ -99,7 +110,8 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours - user stays logged in for 1 day / 24 Stunden - Benutzer bleibt 1 Tag angemeldet
       httpOnly: true, // Prevents JavaScript access to cookies / Verhindert JavaScript-Zugriff auf Cookies
-      secure: false, // Set to true in production with HTTPS / Auf true setzen in Produktion mit HTTPS
+      secure: isProduction, // Enable secure cookies in production / Sichere Cookies in Produktion aktivieren
+      sameSite: "strict", // CSRF protection / CSRF-Schutz
     },
   })
 );
@@ -185,9 +197,45 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
-// Start the Express server / Starte den Express-Server
-// Listen on configured PORT / Höre auf konfiguriertem PORT
-app.listen(port, () => {
-  // Log success message with server URL / Protokolliere Erfolgsmeldung mit Server-URL
-  console.log(`Server running on http://localhost:${port}`);
-});
+// APPLICATION STARTUP / ANWENDUNGSSTART
+// Wrap app initialization in async function to handle database initialization
+// Wickle App-Initialisierung in async-Funktion ein um Datenbankinitialisierung zu handhaben
+async function startServer(): Promise<void> {
+  try {
+    // Initialize database BEFORE starting server / Initialisiere Datenbank VOR dem Starten des Servers
+    await initializeDatabase();
+    console.log("✅ Database initialized successfully!");
+
+    // Start the Express server / Starte den Express-Server
+    const server = app.listen(port, () => {
+      // Log success message with server URL / Protokolliere Erfolgsmeldung mit Server-URL
+      console.log(`✅ Server running on http://localhost:${port}`);
+      console.log(
+        `📝 Environment: ${isProduction ? "production" : "development"}`
+      );
+    });
+
+    // Graceful shutdown / Sanftes Herunterfahren
+    process.on("SIGTERM", () => {
+      console.log("SIGTERM signal received: closing HTTP server");
+      server.close(() => {
+        console.log("HTTP server closed");
+        process.exit(0);
+      });
+    });
+
+    process.on("SIGINT", () => {
+      console.log("\nSIGINT signal received: closing HTTP server");
+      server.close(() => {
+        console.log("HTTP server closed");
+        process.exit(0);
+      });
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1); // Exit if database initialization fails / Beende wenn Datenbankinitialisierung fehlschlägt
+  }
+}
+
+// Start the application / Starte die Anwendung
+startServer();
