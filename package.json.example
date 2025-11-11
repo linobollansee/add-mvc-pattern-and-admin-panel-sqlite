@@ -1,130 +1,130 @@
 {
-  "name": "blog-mvc-admin",
-  "version": "1.0.0",
-  "description": "Blog with MVC pattern and admin panel",
-  "main": "dist/app.js",
+  "name": "blog-mvc-admin", // Package name for npm registry
+  "version": "1.0.0", // Semantic versioning (major.minor.patch)
+  "description": "Blog with MVC pattern and admin panel", // Brief project description
+  "main": "dist/app.js", // Entry point for the compiled application
   "scripts": {
-    "// Development": "",
-    "dev": "nodemon --exec ts-node -r dotenv/config src/app.ts",
-    "dev:watch": "concurrently \"npm:watch:ts\" \"npm:watch:assets\" \"npm:dev\"",
-    "watch:ts": "tsc --watch --preserveWatchOutput",
-    "watch:assets": "nodemon --watch src/public --watch src/views --ext css,js,njk --exec npm run copy:assets",
+    // Development
+    "dev": "nodemon --exec ts-node -r dotenv/config src/app.ts", // Start dev server with hot reload, executes TypeScript directly with environment variables loaded
+    "dev:watch": "concurrently \"npm:watch:ts\" \"npm:watch:assets\" \"npm:dev\"", // Run TypeScript compilation, asset watching, and dev server simultaneously
+    "watch:ts": "tsc --watch --preserveWatchOutput", // Watch TypeScript files and recompile on changes, keep previous output visible
+    "watch:assets": "nodemon --watch src/public --watch src/views --ext css,js,njk --exec npm run copy:assets", // Watch static files and templates, copy to dist when changed
     
-    "// Building": "",
-    "prebuild": "npm run clean && npm run lint",
-    "build": "tsc --project tsconfig.build.json",
-    "postbuild": "npm run copy:assets && npm run copy:data",
-    "build:prod": "cross-env NODE_ENV=production npm run build",
-    "copy:assets": "node scripts/copy-assets.js",
-    "copy:data": "node scripts/copy-data.js",
+    // Building
+    "prebuild": "npm run clean && npm run lint", // Runs automatically before 'build': clean dist folder and run linter
+    "build": "tsc --project tsconfig.build.json", // Compile TypeScript to JavaScript using build-specific config (excludes tests)
+    "postbuild": "npm run copy:assets && npm run copy:data", // Runs automatically after 'build': copy static files and database
+    "build:prod": "cross-env NODE_ENV=production npm run build", // Build with production environment variable set (cross-platform)
+    "copy:assets": "node scripts/copy-assets.js", // Copy views and public files to dist folder
+    "copy:data": "node scripts/copy-data.js", // Copy SQLite database file to dist folder
     
-    "// Running": "",
-    "start": "node dist/app.js",
-    "start:prod": "cross-env NODE_ENV=production node dist/app.js",
-    "start:dev": "node -r dotenv/config dist/app.js",
+    // Running
+    "start": "node dist/app.js", // Start the compiled application (requires 'npm run build' first)
+    "start:prod": "cross-env NODE_ENV=production node dist/app.js", // Start in production mode with NODE_ENV set
+    "start:dev": "node -r dotenv/config dist/app.js", // Start compiled app with .env variables loaded
     
-    "// Database": "",
-    "db:migrate": "ts-node scripts/migrate.ts",
-    "db:migrate:prod": "node dist/scripts/migrate.js",
-    "db:seed": "ts-node scripts/seed.ts",
-    "db:seed:prod": "node dist/scripts/seed.js",
-    "db:reset": "npm run db:migrate && npm run db:seed",
-    "db:backup": "node scripts/backup-db.js",
+    // Database
+    "db:migrate": "ts-node scripts/migrate.ts", // Run database migrations in development (creates/updates tables)
+    "db:migrate:prod": "node dist/scripts/migrate.js", // Run migrations in production from compiled code
+    "db:seed": "ts-node scripts/seed.ts", // Populate database with sample/initial data for development
+    "db:seed:prod": "node dist/scripts/seed.js", // Seed database in production from compiled code
+    "db:reset": "npm run db:migrate && npm run db:seed", // Reset database: run migrations then seed data
+    "db:backup": "node scripts/backup-db.js", // Create a backup of the SQLite database file
     
-    "// Testing": "",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:unit": "jest --testPathPattern=tests/unit",
-    "test:integration": "jest --testPathPattern=tests/integration",
-    "test:e2e": "jest --testPathPattern=tests/e2e",
+    // Testing
+    "test": "jest", // Run all tests using Jest testing framework
+    "test:watch": "jest --watch", // Run tests in watch mode, re-run on file changes
+    "test:coverage": "jest --coverage", // Run tests and generate code coverage report
+    "test:unit": "jest --testPathPattern=tests/unit", // Run only unit tests (isolated component testing)
+    "test:integration": "jest --testPathPattern=tests/integration", // Run integration tests (multiple components working together)
+    "test:e2e": "jest --testPathPattern=tests/e2e", // Run end-to-end tests (full application workflow testing)
     
-    "// Code Quality": "",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
-    "format": "prettier --write \"src/**/*.{ts,js,json,njk}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,js,json,njk}\"",
-    "type-check": "tsc --noEmit",
+    // Code Quality
+    "lint": "eslint src/**/*.ts", // Check TypeScript files for code quality issues and style violations
+    "lint:fix": "eslint src/**/*.ts --fix", // Auto-fix ESLint issues where possible
+    "format": "prettier --write \"src/**/*.{ts,js,json,njk}\"", // Format all source files with Prettier (writes changes)
+    "format:check": "prettier --check \"src/**/*.{ts,js,json,njk}\"", // Check if files are formatted correctly (no changes made)
+    "type-check": "tsc --noEmit", // Check TypeScript types without generating output files
     
-    "// Utilities": "",
-    "clean": "rimraf dist coverage",
-    "clean:all": "rimraf dist coverage node_modules",
-    "prepare": "husky install",
-    "validate": "npm run type-check && npm run lint && npm run test",
+    // Utilities
+    "clean": "rimraf dist coverage", // Delete compiled output and test coverage folders (cross-platform)
+    "clean:all": "rimraf dist coverage node_modules", // Nuclear clean: remove all generated files and dependencies
+    "prepare": "husky install", // Install Git hooks automatically after npm install (for pre-commit checks)
+    "validate": "npm run type-check && npm run lint && npm run test", // Run all validation checks: types, linting, and tests
     
-    "// Production": "",
-    "deploy": "npm run build:prod && npm run db:migrate:prod",
-    "pm2:start": "pm2 start ecosystem.config.js",
-    "pm2:stop": "pm2 stop blog-mvc-admin",
-    "pm2:restart": "pm2 restart blog-mvc-admin",
-    "pm2:logs": "pm2 logs blog-mvc-admin"
+    // Production
+    "deploy": "npm run build:prod && npm run db:migrate:prod", // Full deployment: build for production and run database migrations
+    "pm2:start": "pm2 start ecosystem.config.js", // Start app with PM2 process manager (keeps app running, auto-restart)
+    "pm2:stop": "pm2 stop blog-mvc-admin", // Stop the PM2-managed application process
+    "pm2:restart": "pm2 restart blog-mvc-admin", // Restart the application (useful after deployments)
+    "pm2:logs": "pm2 logs blog-mvc-admin" // View real-time application logs from PM2
   },
-  "keywords": [
+  "keywords": [ // Search terms for npm registry
     "blog",
     "mvc",
     "express",
     "nunjucks"
   ],
-  "author": "",
+  "author": "", // Package author name/email
   "license": "ISC",
-  "dependencies": {
-    "better-sqlite3": "^12.4.1",
-    "body-parser": "^1.20.2",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "nunjucks": "^3.2.4",
-    "sanitize-html": "^2.11.0",
-    "helmet": "^8.0.0",
-    "compression": "^1.7.4",
-    "morgan": "^1.10.0",
-    "winston": "^3.11.0",
-    "express-rate-limit": "^7.1.5",
-    "csurf": "^1.11.0",
-    "cookie-parser": "^1.4.6",
-    "express-validator": "^7.0.1"
+  "dependencies": { // Production dependencies (required to run the application)
+    "better-sqlite3": "^12.4.1", // Fast SQLite3 database driver with synchronous API
+    "body-parser": "^1.20.2", // Parse incoming request bodies (JSON, URL-encoded)
+    "dotenv": "^16.3.1", // Load environment variables from .env file
+    "express": "^4.18.2", // Fast, minimalist web framework for Node.js
+    "express-session": "^1.17.3", // Session middleware for Express (user login state)
+    "nunjucks": "^3.2.4", // Powerful templating engine (like Jinja2 for Python)
+    "sanitize-html": "^2.11.0", // Sanitize user HTML input to prevent XSS attacks
+    "helmet": "^8.0.0", // Security middleware: sets various HTTP headers to protect against common attacks
+    "compression": "^1.7.4", // Compress response bodies for better performance (gzip)
+    "morgan": "^1.10.0", // HTTP request logger middleware
+    "winston": "^3.11.0", // Flexible logging library for application logs
+    "express-rate-limit": "^7.1.5", // Rate limiting middleware to prevent abuse/DDoS
+    "csurf": "^1.11.0", // CSRF protection middleware for forms
+    "cookie-parser": "^1.4.6", // Parse Cookie header and populate req.cookies
+    "express-validator": "^7.0.1" // Validation and sanitization middleware for Express
   },
-  "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/express": "^5.0.5",
-    "@types/express-session": "^1.18.2",
-    "@types/node": "^24.10.0",
-    "@types/nunjucks": "^3.2.6",
-    "@types/sanitize-html": "^2.16.0",
-    "@types/compression": "^1.7.5",
-    "@types/morgan": "^1.9.9",
-    "@types/cookie-parser": "^1.4.7",
-    "@types/jest": "^29.5.11",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "prettier": "^3.2.4",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.1",
-    "supertest": "^6.3.4",
-    "@types/supertest": "^6.0.2",
-    "nodemon": "^3.0.1",
-    "rimraf": "^6.1.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
-    "concurrently": "^8.2.2",
-    "cross-env": "^7.0.3",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
-    "pm2": "^5.3.0"
+  "devDependencies": { // Development-only dependencies (not needed in production)
+    "@types/better-sqlite3": "^7.6.13", // TypeScript type definitions for better-sqlite3
+    "@types/express": "^5.0.5", // TypeScript type definitions for Express
+    "@types/express-session": "^1.18.2", // TypeScript type definitions for express-session
+    "@types/node": "^24.10.0", // TypeScript type definitions for Node.js built-in modules
+    "@types/nunjucks": "^3.2.6", // TypeScript type definitions for Nunjucks
+    "@types/sanitize-html": "^2.16.0", // TypeScript type definitions for sanitize-html
+    "@types/compression": "^1.7.5", // TypeScript type definitions for compression
+    "@types/morgan": "^1.9.9", // TypeScript type definitions for morgan
+    "@types/cookie-parser": "^1.4.7", // TypeScript type definitions for cookie-parser
+    "@types/jest": "^29.5.11", // TypeScript type definitions for Jest
+    "@typescript-eslint/eslint-plugin": "^6.19.0", // ESLint plugin for TypeScript-specific linting rules
+    "@typescript-eslint/parser": "^6.19.0", // Parser that allows ESLint to understand TypeScript syntax
+    "eslint": "^8.56.0", // Pluggable linting utility for JavaScript and TypeScript
+    "eslint-config-prettier": "^9.1.0", // Disable ESLint rules that conflict with Prettier
+    "prettier": "^3.2.4", // Opinionated code formatter for consistent style
+    "jest": "^29.7.0", // JavaScript testing framework with focus on simplicity
+    "ts-jest": "^29.1.1", // Jest transformer for TypeScript (allows testing .ts files)
+    "supertest": "^6.3.4", // HTTP assertion library for testing Express routes
+    "@types/supertest": "^6.0.2", // TypeScript type definitions for supertest
+    "nodemon": "^3.0.1", // Auto-restart Node.js app when files change (development)
+    "rimraf": "^6.1.0", // Cross-platform rm -rf command for cleaning folders
+    "ts-node": "^10.9.2", // Execute TypeScript files directly without compilation
+    "typescript": "^5.9.3", // TypeScript language compiler and type checker
+    "concurrently": "^8.2.2", // Run multiple npm scripts simultaneously
+    "cross-env": "^7.0.3", // Set environment variables cross-platform (Windows/Mac/Linux)
+    "husky": "^8.0.3", // Git hooks manager (run scripts on commit, push, etc.)
+    "lint-staged": "^15.2.0", // Run linters on staged git files only (pre-commit)
+    "pm2": "^5.3.0" // Production process manager with load balancing and monitoring
   },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+  "engines": { // Specify required Node.js and npm versions for compatibility
+    "node": ">=18.0.0", // Requires Node.js version 18.0.0 or higher
+    "npm": ">=9.0.0" // Requires npm version 9.0.0 or higher
   },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --write"
+  "lint-staged": { // Configuration for lint-staged: run commands on staged git files before commit
+    "*.ts": [ // For TypeScript files
+      "eslint --fix", // Run ESLint and auto-fix issues
+      "prettier --write" // Format with Prettier
     ],
-    "*.{json,njk}": [
-      "prettier --write"
+    "*.{json,njk}": [ // For JSON and Nunjucks template files
+      "prettier --write" // Format with Prettier only
     ]
   }
 }
